@@ -21,7 +21,7 @@ func rcloneUpload(file string, plan config.Plan) (string, error) {
 		configSection = plan.Name
 	}
 
-	upload := fmt.Sprintf("rclone --config=\"%v\" copy %v %v:%v/%v",
+	upload := fmt.Sprintf("rclone --config=\"%v\" copy %v %v:%v/%v --no-check-certificate",
 		plan.Rclone.ConfigFilePath, file, configSection, plan.Rclone.Bucket, fileName)
 
 	result, err := sh.Command("/bin/sh", "-c", upload).SetTimeout(time.Duration(plan.Scheduler.Timeout) * time.Minute).CombinedOutput()

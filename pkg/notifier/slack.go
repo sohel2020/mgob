@@ -2,13 +2,13 @@ package notifier
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/pkg/errors"
-
 	"github.com/stefanprodan/mgob/pkg/config"
 )
 
@@ -67,7 +67,7 @@ func sendSlackNotification(subject string, body string, warn bool, cfg *config.S
 	}
 
 	b := bytes.NewBuffer(data)
-
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	if res, err := http.Post(cfg.URL, "application/json", b); err != nil {
 		return errors.Wrapf(err, "Sending data to slack failed")
 	} else {
